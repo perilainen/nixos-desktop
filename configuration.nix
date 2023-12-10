@@ -11,7 +11,6 @@ in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./neovim
     # (import "${home-manager}/nixos")
   ];
 
@@ -57,9 +56,9 @@ in {
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
+    layout = "us,se";
     xkbVariant = "";
-    xkbOptions = "caps:swapescape";
+    xkbOptions = "caps:escape";
   };
 
   # Enable CUPS to print documents.
@@ -90,10 +89,11 @@ in {
     isNormalUser = true;
     description = "Per Johansson";
     extraGroups = ["networkmanager" "wheel"];
+    shell = pkgs.fish;
     packages = with pkgs; [
-      firefox
-      brave
-      bitwarden
+      # firefox
+      # brave
+      # bitwarden
       #  thunderbird
     ];
   };
@@ -107,10 +107,15 @@ in {
   environment.systemPackages = with pkgs; [
     git
     nerdfonts
+    gnome3.gnome-tweaks
+    openconnect
+    fish
+    rustup
 
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
   ];
+  programs.fish.enable = true;
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
