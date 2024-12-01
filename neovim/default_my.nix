@@ -1,12 +1,14 @@
-{ pkgs, lib, ... }:
-let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   nixvim = import (builtins.fetchGit {
     url = "https://github.com/nix-community/nixvim";
     # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
     # ref = "nixos-23.05";
   });
-in
-{
+in {
   imports = [
     # For home-manager
     nixvim.homeManagerModules.nixvim
@@ -40,12 +42,11 @@ in
           "<CR>" = "cmp.mapping.confirm({ select = true })";
         };
 
-
-        sources = [
-          {name = "nvim_lsp";}
-          {name = "path";}
-          {name = "buffer";}
-        ];
+        # sources = [
+        #   {name = "nvim_lsp";}
+        #   {name = "path";}
+        #   {name = "buffer";}
+        # ];
 
         window = {
           completion.border = "rounded";
@@ -62,12 +63,12 @@ in
       treesitter.enable = true;
       noice.enable = true;
       notify.enable = true;
-#      lsp = {
-#        enable = true;
-#        keymaps.lspBuf = {
-#          "K" = "hover";
-#        };
-#      };
+      #      lsp = {
+      #        enable = true;
+      #        keymaps.lspBuf = {
+      #          "K" = "hover";
+      #        };
+      #      };
       telescope = {
         enable = true;
         keymaps = {
@@ -84,7 +85,7 @@ in
       none-ls.enable = true;
     };
     extraPlugins = with pkgs.vimPlugins; [
-    lspkind-nvim
+      lspkind-nvim
     ];
     options = {
       number = true;

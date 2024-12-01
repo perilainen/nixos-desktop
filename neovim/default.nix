@@ -1,43 +1,43 @@
-  {pkgs, ...}:
-  {
+{pkgs, ...}: {
   programs.nixvim = {
     enable = true;
     # extraConfigLua = builtins.readFile ./init.lua;
+    defaultEditor = true;
     extraConfigLua = builtins.readFile ./my.lua;
     colorschemes.catppuccin = {
       enable = true;
-      flavour = "mocha";
-      terminalColors = true;
-
-      integrations = {
-        barbar = true;
-        gitsigns = true;
-        indent_blankline = {
-          enabled = true;
-          colored_indent_levels = true;
+      settings = {
+        flavour = "mocha";
+        term_colors = true;
+        styles = {
+          keywords = ["italic"];
+          conditionals = ["bold"];
+          loops = ["bold"];
+          functions = ["bold"];
+          properties = ["italic"];
+          booleans = ["bold" "italic"];
+          operators = ["bold"];
         };
-        lsp_trouble = true;
-        #  mini = true;
-        native_lsp.enabled = true;
-        navic.enabled = true;
-        nvimtree = true;
-        treesitter = true;
-        treesitter_context = true;
-        ts_rainbow2 = true;
-      };
-
-      styles = {
-        booleans = ["bold" "italic"];
-        conditionals = ["bold"];
-        functions = ["bold"];
-        keywords = ["italic"];
-        loops = ["bold"];
-        operators = ["bold"];
-        properties = ["italic"];
+        integrations = {
+          # barbar = true;
+          gitsigns = true;
+          indent_blankline = {
+            enabled = true;
+            colored_indent_levels = true;
+          };
+          lsp_trouble = true;
+          #  mini = true;
+          native_lsp.enabled = true;
+          navic.enabled = true;
+          nvimtree = true;
+          treesitter = true;
+          treesitter_context = true;
+          ts_rainbow2 = true;
+        };
       };
     };
 
-    options = {
+    opts = {
       clipboard = "unnamedplus";
       number = true;
       relativenumber = true;
@@ -53,11 +53,12 @@
       tw = 79;
       ignorecase = true;
       smartcase = true;
+      wrap = false;
       # completeopt = "menuone,menuone,noselect";
     };
 
     globals = {
-      mapleader = " ";
+      mapleader = ",";
       rust_recommended_style = false;
       neovide_cursor_animation_length = 2.5e-2;
       neovide_cursor_vfx_mode = "railgun";
@@ -93,6 +94,12 @@
         key = "<leader>ss";
         options.silent = true;
         action = "<cmd>:Telescope<CR>";
+      }
+      {
+        mode = "n";
+        key = "<leader>lw";
+        options.silent = true;
+        action = "<cmd>Telescope diagnostics<CR>";
       }
       {
         mode = "n";
@@ -146,68 +153,228 @@
       };
       toggleterm = {
         enable = true;
-        openMapping = "<C-\\>";
-        direction = "float";
+        # openMapping = "<C-\\>";
+        settings = {
+          direction = "float";
+        };
       };
 
       oil.enable = true;
       cmp-nvim-lsp.enable = true;
       cmp_luasnip.enable = true;
-      nvim-cmp = {
+      cmp = {
         enable = true;
-        snippet.expand = "luasnip";
-        formatting = {
-          format = ''
-            require("lspkind").cmp_format({
-                    mode="symbol",
-                    maxwidth = 50,
-                    ellipsis_char = "..."
-            })
-          '';
-        };
-      };
 
-      nvim-cmp.mappingPresets = ["insert"];
-
-      nvim-cmp.mapping = {
-        "<CR>" = "cmp.mapping.confirm({ select = true })";
-        "<C-j>" = "cmp.mapping.scroll_docs(4)";
-        "<C-k>" = "cmp.mapping.scroll_docs(-4)";
-        "<Tab>" = {
-          modes = ["i" "s"];
-          action = ''
-            function(fallback)
-              if cmp.visible() then
-                cmp.select_next_item()
-              elseif luasnip.expandable() then
-                luasnip.expand()
-              elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-              elseif check_backspace() then
-                fallback()
-              else
-                fallback()
-              end
+        settings = {
+          experimental = {ghost_text = true;};
+          snippet.expand = ''
+            function(args)
+              require('luasnip').lsp_expand(args.body)
             end
           '';
+          sources = [
+            {name = "nvim_lsp";}
+            {name = "luasnip";}
+            {
+              name = "buffer";
+              option.get_bufnrs.__raw = "vim.api.nvim_list_bufs";
+            }
+            {name = "nvim_lua";}
+            {name = "path";}
+            {name = "copilot";}
+            {name = "codeium-vim";}
+          ];
+
+          formatting = {
+            fields = ["abbr" "kind" "menu"];
+            format =
+              # lua
+              ''
+                function(_, item)
+                  local icons = {
+                    Namespace = "󰌗",
+                    Text = "󰉿",
+                    Method = "󰆧",
+                    Function = "󰆧",
+                    Constructor = "",
+                    Field = "󰜢",
+                    Variable = "󰀫",
+                    Class = "󰠱",
+                    Interface = "",
+                    Module = "",
+                    Property = "󰜢",
+                    Unit = "󰑭",
+                    Value = "󰎠",
+                    Enum = "",
+                    Keyword = "󰌋",
+                    Snippet = "",
+                    Color = "󰏘",
+                    File = "󰈚",
+                    Reference = "󰈇",
+                    Folder = "󰉋",
+                    EnumMember = "",
+                    Constant = "󰏿",
+                    Struct = "󰙅",
+                    Event = "",
+                    Operator = "󰆕",
+                    TypeParameter = "󰊄",
+                    Table = "",
+                    Object = "󰅩",
+                    Tag = "",
+                    Array = "[]",
+                    Boolean = "",
+                    Number = "",
+                    Null = "󰟢",
+                    String = "󰉿",
+                    Calendar = "",
+                    Watch = "󰥔",
+                    Package = "",
+                    Copilot = "",
+                    Codeium = "",
+                    TabNine = "",
+                  }
+
+                  local icon = icons[item.kind] or ""
+                  item.kind = string.format("%s %s", icon, item.kind or "")
+                  return item
+                end
+              '';
+          };
+
+          window = {
+            completion = {
+              winhighlight = "FloatBorder:CmpBorder,Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel";
+              scrollbar = false;
+              sidePadding = 0;
+              border = ["╭" "─" "╮" "│" "╯" "─" "╰" "│"];
+            };
+
+            settings.documentation = {
+              border = ["╭" "─" "╮" "│" "╯" "─" "╰" "│"];
+              winhighlight = "FloatBorder:CmpBorder,Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel";
+            };
+          };
+
+          mapping = {
+            "<C-n>" = "cmp.mapping.select_next_item()";
+            "<C-p>" = "cmp.mapping.select_prev_item()";
+            "<C-j>" = "cmp.mapping.select_next_item()";
+            "<C-k>" = "cmp.mapping.select_prev_item()";
+            "<C-d>" = "cmp.mapping.scroll_docs(-4)";
+            "<C-f>" = "cmp.mapping.scroll_docs(4)";
+            "<C-Space>" = "cmp.mapping.complete()";
+            "<S-Tab>" = "cmp.mapping.close()";
+            "<Tab>" =
+              # lua
+              ''
+                function(fallback)
+                  local line = vim.api.nvim_get_current_line()
+                  if line:match("^%s*$") then
+                    fallback()
+                  elseif cmp.visible() then
+                    cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
+                  else
+                    fallback()
+                  end
+                end
+              '';
+            "<Down>" =
+              # lua
+              ''
+                function(fallback)
+                  if cmp.visible() then
+                    cmp.select_next_item()
+                  elseif require("luasnip").expand_or_jumpable() then
+                    vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+                  else
+                    fallback()
+                  end
+                end
+              '';
+            "<Up>" =
+              # lua
+              ''
+                function(fallback)
+                  if cmp.visible() then
+                    cmp.select_prev_item()
+                  elseif require("luasnip").jumpable(-1) then
+                    vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
+                  else
+                    fallback()
+                  end
+                end
+              '';
+          };
         };
       };
-      nvim-cmp.sources = [
-        {name = "nvim_lsp";}
-        {name = "luasnip";}
-        {name = "buffer";}
-        {name = "copilot";}
-      ];
-      # nvim-cmp.window.documentation.maxHeight = "400";
+      # nvim-cmp = {
+      # enable = true;
+      # snippet.expand = "luasnip";
+      # formatting = {
+      #   format = ''
+      #     require("lspkind").cmp_format({
+      #             mode="symbol",
+      #             maxwidth = 50,
+      #             ellipsis_char = "..."
+      #     })
+      #   '';
+      # };
+      # };
+
+      # nvim-cmp.mappingPresets = ["insert"];
+
+      # nvim-cmp.mapping = {
+      #   "<CR>" = "cmp.mapping.confirm({ select = false })";
+      #   "<C-j>" = "cmp.mapping.scroll_docs(4)";
+
+      #   modes = ["i" "s"];
+      #   action = ''
+      #     function(fallback)
+      #       if cmp.visible() then
+      #         cmp.select_next_item()
+      #       else
+      #         fallback()
+      #       end
+      #     end
+      #   '';
+      # action = ''
+      #   function(fallback)
+      #     if cmp.visible() then
+      #       cmp.select_next_item()
+      #     elseif luasnip.expandable() then
+      #       luasnip.expand()
+      #     elseif luasnip.expand_or_jumpable() then
+      #       luasnip.expand_or_jump()
+      #     elseif check_backspace() then
+      #       fallback()
+      #     else
+      #       fallback()
+      #     end
+      #   end
+      # '';
+      # };
+      # };
+      # nvim-cmp.sources = [
+      #   {name = "nvim_lsp";}
+      #   {name = "luasnip";}
+      #   {name = "buffer";}
+      #   {name = "copilot";}
+      # ];
       # nvim-cmp.window.documentation.maxWidth = "40";
       # copilot-cmp.enable = true;
-      copilot-lua.enable = true;
+      codeium-vim.enable = true;
+
+      copilot-lua = {
+        enable = true;
+        panel.enabled = false;
+        suggestion.enabled = false;
+      };
       # noice.enable = true;
       # notify= {
       # enable = true;
       # };
       which-key.enable = true;
-      comment-nvim.enable = true;
+      comment.enable = true;
       emmet.enable = true;
       nvim-autopairs.enable = true;
       nvim-lightbulb.enable = true;
@@ -215,13 +382,13 @@
 
       barbar = {
         enable = true;
-        autoHide = true;
-        icons.diagnostics = {
-          error.enable = true;
-          hint.enable = true;
-          info.enable = true;
-          warn.enable = true;
-        };
+        # autoHide = true;
+        # icons.diagnostics = {
+        #   error.enable = true;
+        #   hint.enable = true;
+        #   info.enable = true;
+        #   warn.enable = true;
+        # };
       };
 
       # coq-nvim = {
@@ -283,15 +450,22 @@
         # '';
 
         servers = {
-          eslint.enable = true;
+          #eslint.enable = true;
           lua-ls.enable = true;
           nixd.enable = true;
           nil_ls.enable = true;
-          tailwindcss.enable = true;
+          #tailwindcss.enable = true;
           tsserver.enable = true;
+          clangd.enable = true;
           gopls.enable = true;
           html.enable = true;
           yamlls.enable = true;
+          ruff-lsp.enable = true;
+          kotlin-language-server.enable = true;
+          pyright = {
+            enable = true;
+            # plugins.rope.enabled = true;
+          };
           rust-analyzer = {
             enable = true;
             settings = {
@@ -312,7 +486,7 @@
               #   imports_layout = "HorizontalVertical";
               #   group_imports = "StdExternalCrate";
               normalize_comments = true;
-                format_code_in_doc_comments = true;
+              format_code_in_doc_comments = true;
             };
           };
         };
@@ -356,7 +530,7 @@
       telescope = {
         enable = true;
         extensions.fzf-native.enable = true;
-        extraOptions.defaults.layout_config.vertical.height = 0.5;
+        settings.defaults.layout_config.vertical.height = 0.5;
         keymaps = {
           "<leader>st" = "live_grep";
           "<leader>sf" = "find_files";

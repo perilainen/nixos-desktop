@@ -4,10 +4,13 @@
 {
   config,
   pkgs,
+  inputs,
   ...
-}: let
-  # home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz";
-in {
+}:
+# let
+# home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-22.05.tar.gz";
+# in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -18,6 +21,9 @@ in {
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.extraModprobeConfig = ''
+    options hid_apple fnmode=2
+  '';
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -48,24 +54,39 @@ in {
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 
+  services.flatpak.enable = true;
+  services.input-remapper.enable = true;
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.sddm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
 
+  services.xserver = {
+    enable = true;
+    desktopManager = {
+      xfce.enable = true;
+      gnome.enable = true;
+    };
+  };
   # Configure keymap in X11
   services.xserver = {
-    layout = "us,se";
-    xkbVariant = "";
-    xkbOptions = "caps:escape";
+    xkb.layout = "us,se";
+    xkb.variant = "";
+    xkb.options = "caps:escape";
   };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  hardware.bluetooth.settings.General.Experimental = true;
+  hardware.bluetooth.settings.General.FastConnectable = true;
+
+  services.blueman.enable = true;
   # Enable sound with pipewire.
-  sound.enable = true;
+  # sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -74,7 +95,7 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -88,7 +109,7 @@ in {
   users.users.perj = {
     isNormalUser = true;
     description = "Per Johansson";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "input"];
     shell = pkgs.fish;
     packages = with pkgs; [
       # firefox
@@ -105,12 +126,33 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    (pkgs.waybar.overrideAttrs (oldAttrs: {
+      mesonFlags =
+        oldAttrs.mesonFlags
+        ++ ["-Dexperimental=true"];
+    }))
     git
     nerdfonts
-    gnome3.gnome-tweaks
     openconnect
     fish
     rustup
+    (python3.withPackages (p:
+      with p; [
+        pip
+        virtualenv
+      ]))
+    ripgrep
+    wayland
+    waybar
+    dunst
+    rofi-wayland
+    libnotify
+    swww
+    copyq
+    cliphist
+    wl-clipboard
+    ninja
+    cmake
 
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
@@ -118,7 +160,7 @@ in {
   programs.fish.enable = true;
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
     fira-code
@@ -127,6 +169,18 @@ in {
     dina-font
     proggyfonts
   ];
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    # nvidiaPatches = true;
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+  };
+  hardware = {
+    graphics = {enable = true;};
+    nvidia.modesetting.enable = true;
+  };
+  xdg.portal.enable = true;
+  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   #
   #   # Some programs need SUID wrappers, can be configured further or are
   #   # started in user sessions.

@@ -1,35 +1,36 @@
-require('telescope').load_extension 'ui-select'
+require("telescope").load_extension("ui-select")
 
-require('catppuccin').setup {
-  flavour = 'mocha',
+require("catppuccin").setup({
+  flavour = "mocha",
   color_overrides = {
     mocha = {
-      base = '#1e1e2f',
+      base = "#1e1e2f",
     },
   },
   styles = {
-    properties = { 'italic' },
-    operators = { 'bold' },
+    properties = { "italic" },
+    operators = { "bold" },
   },
-}
+})
 
-vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'Visual' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'Visual' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'Visual' })
-vim.cmd.colorscheme 'catppuccin'
-vim.cmd 'set guifont=IosevkaNerdFont\\ Nerd\\ Font:h18'
-vim.cmd 'set mouse=a'
+vim.api.nvim_set_hl(0, "IlluminatedWordText", { link = "Visual" })
+vim.api.nvim_set_hl(0, "IlluminatedWordRead", { link = "Visual" })
+vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { link = "Visual" })
+vim.cmd.colorscheme("catppuccin")
+-- vim.cmd 'set guifont=IosevkaNerdFont\\ Nerd\\ Font:h18'
+vim.cmd("set guifont=Fira\\ Code:h16")
+vim.cmd("set mouse=a")
 
 -- require('nvim-lightbulb').setup { autocmd = { enabled = true } }
-require('gitsigns').setup()
-require('mini.starter').setup()
-require('mini.trailspace').setup()
-require('mini.surround').setup()
-require('mini.move').setup()
-require('octo').setup()
-require('renamer').setup {
+require("gitsigns").setup()
+require("mini.starter").setup()
+require("mini.trailspace").setup()
+require("mini.surround").setup()
+require("mini.move").setup()
+require("octo").setup()
+require("renamer").setup({
   empty = true,
-}
+})
 
 -- require('barbecue').setup {}
 
@@ -40,17 +41,16 @@ require('renamer').setup {
 --   },
 -- }
 
-require('feline').setup {
-  components = require('catppuccin.groups.integrations.feline').get(),
-}
+require("feline").setup({
+  components = require("catppuccin.groups.integrations.feline").get(),
+})
 
-require('FTerm').setup {
+require("FTerm").setup({
   dimensions = {
     height = 0.9,
     width = 0.9,
   },
-}
-
+})
 
 -- require('mini.indentscope').setup {
 --   symbol = '│',
@@ -59,40 +59,40 @@ require('FTerm').setup {
 --   },
 -- }
 
-require('mini.jump2d').setup {
+require("mini.jump2d").setup({
   mappings = {
-    start_jumping = 's',
+    start_jumping = "s",
   },
-}
+})
 
-require('nvim-treesitter.configs').setup {
+require("nvim-treesitter.configs").setup({
   rainbow = {
     enable = true,
-    query = 'rainbow-parens',
-    strategy = require('ts-rainbow').strategy.global,
-    disable = { 'tsx' },
+    query = "rainbow-parens",
+    strategy = require("ts-rainbow").strategy.global,
+    disable = { "tsx" },
   },
-}
+})
 
-vim.api.nvim_create_autocmd('FileType', {
+vim.api.nvim_create_autocmd("FileType", {
   callback = function(tbl)
-    local set_offset = require('bufferline.api').set_offset
+    local set_offset = require("bufferline.api").set_offset
 
     local bufwinid
     local last_width
-    local autocmd = vim.api.nvim_create_autocmd('WinScrolled', {
+    local autocmd = vim.api.nvim_create_autocmd("WinScrolled", {
       callback = function()
         bufwinid = bufwinid or vim.fn.bufwinid(tbl.buf)
 
         local width = vim.api.nvim_win_get_width(bufwinid)
         if width ~= last_width then
-          set_offset(width, 'FileTree')
+          set_offset(width, "FileTree")
           last_width = width
         end
       end,
     })
 
-    vim.api.nvim_create_autocmd('BufWipeout', {
+    vim.api.nvim_create_autocmd("BufWipeout", {
       buffer = tbl.buf,
       callback = function()
         vim.api.nvim_del_autocmd(autocmd)
@@ -101,9 +101,9 @@ vim.api.nvim_create_autocmd('FileType', {
       once = true,
     })
   end,
-  pattern = 'NvimTree',
+  pattern = "NvimTree",
 })
 
-vim.keymap.set('i', '<C-j>', function()
-  return vim.fn['codeium#Accept']()
+vim.keymap.set("i", "<C-j>", function()
+  return vim.fn["codeium#Accept"]()
 end, { expr = true })

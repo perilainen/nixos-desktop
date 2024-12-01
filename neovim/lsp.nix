@@ -29,17 +29,17 @@
           nil_ls.enable = true;
           texlab.enable = true;
           rust-analyzer = {
-	    enable = true;
-	    settings = {
+            enable = true;
+            settings = {
               check.command = "clippy";
 
               imports.granularity = {
                 enforce = true;
                 group = "item";
               };
-	      files.excludeDirs = [".direnv"];
+              files.excludeDirs = [".direnv"];
             };
-	    };
+          };
         };
       };
     };
