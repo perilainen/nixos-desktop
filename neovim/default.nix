@@ -140,6 +140,8 @@
       gitsigns.enable = true;
       gitblame.enable = true;
       gitmessenger.enable = true;
+      web-devicons.enable = true;
+
       navbuddy = {
         enable = true;
         lsp.autoAttach = true;
@@ -147,8 +149,10 @@
       luasnip.enable = true;
       lualine = {
         enable = true;
-        sections = {
-          lualine_x = ["lsp_progress" "encoding"];
+        settings = {
+          sections = {
+            lualine_x = ["lsp_progress" "encoding"];
+          };
         };
       };
       toggleterm = {
@@ -451,7 +455,7 @@
 
         servers = {
           #eslint.enable = true;
-          lua-ls.enable = true;
+          lua_ls.enable = true;
           nixd.enable = true;
           nil_ls.enable = true;
           #tailwindcss.enable = true;
@@ -460,13 +464,13 @@
           gopls.enable = true;
           html.enable = true;
           yamlls.enable = true;
-          ruff-lsp.enable = true;
-          kotlin-language-server.enable = true;
+          ruff.enable = true;
+          kotlin_language_server.enable = true;
           pyright = {
             enable = true;
             # plugins.rope.enabled = true;
           };
-          rust-analyzer = {
+          rust_analyzer = {
             enable = true;
             settings = {
               imports.granularity = {

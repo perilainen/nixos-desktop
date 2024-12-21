@@ -39,10 +39,24 @@
     comma
     devenv
     nyxt
+    noto-fonts
+    nerd-fonts.fira-code
+    nerd-fonts.iosevka-term-slab
+    nerd-fonts.symbols-only
+    font-awesome
+    # noto-fonts-cjk-sans
+    # noto-fonts-emoji
+    # liberation_ttf
+    # fira-code
+    # fira-code-symbols
+    # mplus-outline-fonts.githubRelease
+    # dina-font
+    # proggyfonts
 
     # nodejs_21
     #inputs.nixvim-flake.packages.${pkgs.system}.default
   ];
+  fonts.fontconfig.enable = true;
   # wayland.windowManager.hyprland.enable = true;
   programs.kodi.enable = true;
   programs.helix = {
@@ -208,7 +222,7 @@
       main = {
         term = "xterm-256color";
 
-        font = "Fira Code:size=11";
+        # font = "Fira Code:size=11";
         dpi-aware = "yes";
       };
 

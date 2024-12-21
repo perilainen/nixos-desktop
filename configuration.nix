@@ -132,8 +132,14 @@
         ++ ["-Dexperimental=true"];
     }))
     git
-    nerdfonts
-    openconnect
+    # nerd-fonts.fira-code
+    # nerd-fonts.iosevka-term-slab
+    # nerd-fonts.symbols-only
+    # font-awesome
+    # openconnect
+    # noto-fonts
+    # noto-fonts-cjk-sans
+    # noto-fonts-emoji
     fish
     rustup
     (python3.withPackages (p:
@@ -158,17 +164,19 @@
     #  wget
   ];
   programs.fish.enable = true;
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    liberation_ttf
-    fira-code
-    fira-code-symbols
-    mplus-outline-fonts.githubRelease
-    dina-font
-    proggyfonts
-  ];
+  # fonts.fontDir.enable = true;
+
+  # fonts.packages = with pkgs; [
+  #   noto-fonts
+  #   noto-fonts-cjk-sans
+  #   noto-fonts-emoji
+  #   liberation_ttf
+  #   fira-code
+  #   fira-code-symbols
+  #   mplus-outline-fonts.githubRelease
+  #   dina-font
+  #   proggyfonts
+  # ];
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
