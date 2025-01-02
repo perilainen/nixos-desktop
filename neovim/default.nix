@@ -459,7 +459,8 @@
           nixd.enable = true;
           nil_ls.enable = true;
           #tailwindcss.enable = true;
-          tsserver.enable = true;
+          ts_ls.enable = true;
+          # tsserver.enable = true;
           clangd.enable = true;
           gopls.enable = true;
           html.enable = true;
@@ -472,6 +473,9 @@
           };
           rust_analyzer = {
             enable = true;
+            installCargo = true;
+            installRustc = true;
+
             settings = {
               imports.granularity = {
                 enforce = true;

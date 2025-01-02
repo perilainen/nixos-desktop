@@ -21,6 +21,7 @@
 
       # Some default env vars.
       env = XCURSOR_SIZE,24
+      env = XCURSOR_THEME,breeze
       # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
       env = QT_QPA_PLATFORMTHEME,qt5ct
       env = QT_QPA_PLATFORM, wayland
@@ -122,10 +123,10 @@
       # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 
       bind = SUPER CTRL, l, movecurrentworkspacetomonitor , +1
+      unbind=CTRL, w
 
       # See https://wiki.hyprland.org/Configuring/Keywords/ for more
       $mainMod = SUPER
-      bind = $mainMod, R, exec, wofi -show drun -I
       bind = SUPER, V, exec, cliphist list | wofi -dmenu | cliphist decode | wl-copy
       # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
       bind = $mainMod, Q, exec, kitty
@@ -133,7 +134,7 @@
       bind = $mainMod, M, exit,
       bind = $mainMod, E, exec, yazi
       bind = $mainMod, F, togglefloating,
-      bind = $mainMod, R, exec, wofi --show drun
+      bind = $mainMod, R, exec, wofi --show drun -I
       bind = $mainMod, P, pseudo, # dwindle
       bind = $mainMod, J, togglesplit, # dwindle
 

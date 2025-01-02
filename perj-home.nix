@@ -9,6 +9,7 @@
     inputs.nixvim.homeManagerModules.nixvim
     ./neovim
     ./hypr
+    ./waybar.nix
   ];
   home.stateVersion = "23.11";
   home.username = "perj";
@@ -17,13 +18,15 @@
     bottom
     brave
     google-chrome
+    hyprcursor
     firefox
     lazygit
     bitwarden
     pavucontrol
     cider
+    # cider-2
     mpd
-    cider
+    # cider
     hyprpicker
     swayidle
     wlogout
@@ -56,9 +59,42 @@
     # nodejs_21
     #inputs.nixvim-flake.packages.${pkgs.system}.default
   ];
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.whitesur-cursors;
+    name = "WhiteSur-cursors";
+    size = 16;
+  };
+
+  gtk = {
+    enable = true;
+    # theme = {
+    #   package = pkgs.flat-remix-gtk;
+    #   name = "Flat-Remix-GTK-Grey-Darkest";
+    # };
+
+    iconTheme = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+
+    font = {
+      name = "Sans";
+      size = 11;
+    };
+  };
   fonts.fontconfig.enable = true;
   # wayland.windowManager.hyprland.enable = true;
   programs.kodi.enable = true;
+  # programs.waybar = {
+  #   enable = true;
+  #   settings = [
+  #     {
+  #       position = "bottom";
+  #     }
+  #   ];
+  # };
   programs.helix = {
     enable = true;
     settings.keys.normal.K = "hover";
