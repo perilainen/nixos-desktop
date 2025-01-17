@@ -95,6 +95,9 @@
   #     }
   #   ];
   # };
+  programs.navi = {
+    enable = true;
+  };
   programs.helix = {
     enable = true;
     settings.keys.normal.K = "hover";
